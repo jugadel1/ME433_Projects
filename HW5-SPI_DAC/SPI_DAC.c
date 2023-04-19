@@ -19,7 +19,7 @@ void __ISR(_EXTERNAL_0_VECTOR, IPL2SOFT) Ext0ISR(void) { // step 1: the ISR
       char message[MAX_MESSAGE_LENGTH];
       sprintf(message, "%lf\r\n", Waveform[i]);
       NU32DIP_WriteUART1(message);
-      delay(10);  
+      delay(100);  
     }
     state = 0;
     // delay(100);
