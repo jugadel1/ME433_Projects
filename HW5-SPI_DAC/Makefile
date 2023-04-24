@@ -1,6 +1,7 @@
 XC32PATH=C:\Program Files\Microchip\xc32\v4.21\bin
 HARMONYPATH=
 NU32PATH=G:\Other computers\MSIC\Academic\C_Projects\nu32dip
+# C:\Users\jugad\Desktop\Desktop
 PORT=COM3
 TERMEMU=C:\Program Files\PuTTY\putty.exe
 
