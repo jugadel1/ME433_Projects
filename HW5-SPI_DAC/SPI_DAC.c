@@ -1,5 +1,7 @@
 #include "nu32dip.h" // constants, functions for startup and UART
 #include "math.h"
+#include "spi.h"
+
 #define SYSCLK 24000000.0 // system clock 
 #define MAX_MESSAGE_LENGTH 200
 #define s_rate 100
@@ -10,7 +12,7 @@ void delay(int t);
 volatile int state = 0; 
 static volatile float WaveformA[s_rate]; // waveform, used in/out of ISR so volatile
 static volatile float WaveformB[s_rate];
-sendWave(float v, char a_or_b);
+void sendWave(float v, unsigned char a_or_b);
  
 int main(void) {
   NU32DIP_Startup(); // cache on, min flash wait, interrupts on, LED/button init, UART init
@@ -24,6 +26,7 @@ int main(void) {
       sendWave(WaveformB[i],0);   
     }
   return 0;
+  }
 }
 
 void delay(int t) {
@@ -40,8 +43,8 @@ void makeWaveformA(){ // Wave goes from 0->1023(10-bit)
 
 void makeWaveformB(){ // Wave goes from 0->1023(10-bit)
     for (int i = 0; i < s_rate; ++i){
-      if (i < (s_rate/2))){
-        WaveformB[i] = i*1023/(s_rate/2));
+      if (i < s_rate/2){
+        WaveformB[i] = i*1023/(s_rate/2);
       }
       else{
         WaveformB[i] = 1023*2-i*1023/(s_rate/2);
@@ -49,12 +52,12 @@ void makeWaveformB(){ // Wave goes from 0->1023(10-bit)
     }
 }
 
-sendWave(float v, char a_or_b) {
+void sendWave(float v,unsigned char a_or_b) {
   //[a_or_b 1 1 1 [10-bit v] 0 0]
   unsigned int f = v;
   unsigned short t = 0;
   t = 0b111<<12;
-  unsigned char a_or_b; // this is 0b0 or 0b1
+  // unsigned char a_or_b; // this is 0b0 or 0b1
   t = t | (a_or_b<<15);
   t = t | (f<<2);
   

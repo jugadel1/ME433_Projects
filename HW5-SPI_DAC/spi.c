@@ -12,7 +12,7 @@ void initSPI() {
     // Set SDO1
     RPB13Rbits.RPB13R = 0b0011; // RPB13
     // Set SDI1
-    SDI1Rbits.SDI1 = 0b0011; // RPB11  
+    SDI1Rbits.SDI1R = 0b0011; // RPB11  
     // setup SPI1
     SPI1CON = 0; // turn off the spi module and reset it
     SPI1BUF; // clear the rx buffer by reading from it
