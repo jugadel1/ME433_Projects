@@ -19,7 +19,7 @@ int main(void) {
   while(1){
     blink(500); // Diag heartbeat
     // blink GP7 (DIAG HEATBEAT)
-
+    
     // r = read_from_GP0
     // if(r)
     //   turn on GP7 
