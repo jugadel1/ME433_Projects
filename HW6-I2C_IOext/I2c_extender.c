@@ -4,28 +4,28 @@
 
 #define SYSCLK 24000000.0 // system clock 
 #define MAX_MESSAGE_LENGTH 200
-#define s_rate 100
 
-void makeWaveformA();
-void makeWaveformB();
 void delay(int t);
-volatile int state = 0; 
-static volatile float WaveformA[s_rate]; // waveform, used in/out of ISR so volatile
-static volatile float WaveformB[s_rate];
-void sendWave(float v, unsigned char a_or_b);
- 
+void blink(int t);
+void setPin(unsigned char address, unsigned char register, unsigned char value);
+unsigned char readPin(unsigned char address, unsigned char register);
+
 int main(void) {
   NU32DIP_Startup(); // cache on, min flash wait, interrupts on, LED/button init, UART init
-  NU32DIP_WriteUART1("Hello!\r\n");
-  initSPI();
-  makeWaveformA(); // 2Hz sine wave
-  makeWaveformB(); // 1Hz triangle wave
+  NU32DIP_WriteUART1("Hello!\r\n"); //startup greeting 
+  i2c_master_setup(); // Initialize the I2C 1 Comm.
+  // Initialize Extender Chip (GP0 input (button), GP7 Output (LED))
+  
   while(1){
-    for (int i = 0; i < s_rate; ++i){
-      sendWave(WaveformA[i],0);
-      sendWave(WaveformB[i],0);   
-    }
-  return 0;
+    blink(500); // Diag heartbeat
+    // blink GP7 (DIAG HEATBEAT)
+
+    // r = read_from_GP0
+    // if(r)
+    //   turn on GP7 
+    // else
+    //   turn off GP7
+
   }
 }
 
@@ -34,36 +34,31 @@ void delay(int t) {
       _nop(); //do nothing
   }
 }	
-
-void makeWaveformA(){ // Wave goes from 0->1023(10-bit)
-    for (int i = 0; i < s_rate; ++i){
-      WaveformA[i] = 1023/2*sin(2*M_PI*i/(s_rate/2))+1023/2;
-    }
+void setPin(unsigned char address, unsigned char register, unsigned char value){
+  // SEND START BIT
+  // send addy of chip
+      // 0b01000000 // or 0b0100001 for read from the chip
+  // send register name
+      // 0x0A // OLAT SFR (i/o)
+  // send value to turn on chip
+      // 0b10000000 to turn on, 0b00000000 to turn off (GP7)
+  // send stop bit
 }
 
-void makeWaveformB(){ // Wave goes from 0->1023(10-bit)
-    for (int i = 0; i < s_rate; ++i){
-      if (i < s_rate/2){
-        WaveformB[i] = i*1023/(s_rate/2);
-      }
-      else{
-        WaveformB[i] = 1023*2-i*1023/(s_rate/2);
-      }
-    }
+unsigned char readPin(unsigned char address, unsigned char register){
+  // send start bit
+  // send address with write bit
+  // send register you want to read from 
+  // restart
+  // send address with read bit
+  //
 }
 
-void sendWave(float v,unsigned char a_or_b) {
-  //[a_or_b 1 1 1 [10-bit v] 0 0]
-  unsigned int f = v;
-  unsigned short t = 0;
-  t = 0b111<<12;
-  // unsigned char a_or_b; // this is 0b0 or 0b1
-  t = t | (a_or_b<<15);
-  t = t | (f<<2);
-  
-  // send voltage with SPI
-  CS = 0;
-  spi_io(t>>8);
-  spi_io(t);//%0xFF
-  CS = 1;
+void blink(int t){ // = t = time in ms
+  while(1){
+    NU32DIP_YELLOW = 0;
+    delay(t);
+    NU32DIP_YELLOW = 1;
+    delay(t);    
+  }
 }
