@@ -11,3 +11,7 @@
 - Every time you push the USER button, sends a single cycle of a sine wave in 100 data points to UART, with a 0.01 second delay between each data point.
 
 - Uses sin_plotter.py to view the data as a graph.
+
+## HW6 - Communicate with GPIO port extender using I2C
+
+- The goal is to read from the button connected to GP0, and if pushed, turns on an LED connected to GP7, else turns off LED
