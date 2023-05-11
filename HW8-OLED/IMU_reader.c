@@ -2,6 +2,7 @@
 #include "i2c_master_noint.h"
 #include "mpu6050.h"
 #include <stdio.h>
+#include "ssd1306.h"
 
 void blink(int, int); // blink the LEDs function
 
