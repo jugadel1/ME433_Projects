@@ -53,7 +53,7 @@ uint8_t whoami(void);
 // IMU_ARRAY_LEN or not.
 // This function is basically just a wrapper for burst_read_I2C1(), defined in
 // i2c_noint.{c,h}.
-void burst_read_mpu6050(uint8_t * data);
+void burst_read_mpu6050(uint8_t * data); // pointer to array of unisgned chars
 
 /*******************************************************************************
  Functions to combine 8-bit register pairs (each uint8_t) into int16_t's:

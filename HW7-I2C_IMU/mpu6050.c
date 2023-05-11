@@ -61,7 +61,7 @@ uint8_t whoami(void) {
 // and this function does not check to see if the length of "data" equals
 // IMU_ARRAY_LEN or not.
 // This function is basically just a wrapper for burst_read_I2C1()
-void burst_read_mpu6050(uint8_t * data) {
+void burst_read_mpu6050(uint8_t * data) { // data of array of 14 chars
     burst_read_I2C1(IMU_ADDR,ACCEL_XOUT_H,data,IMU_ARRAY_LEN);
 }
 
@@ -101,7 +101,7 @@ int16_t get_zG(uint8_t * data) { // convert z-gyro LSB and MSB to int16_t
  * in x, y, and z; temperature; gyro rates) to float representation
  */
 float conv_xXL(uint8_t * data) { // convert x-acceleration to float (g's)
-    return (get_xXL(data))*0.000061;
+    return (get_xXL(data))*0.000061; // number to convert from +-2g (2/32000)
 }
 
 float conv_yXL(uint8_t * data) { // convert y-acceleration to float (g's)

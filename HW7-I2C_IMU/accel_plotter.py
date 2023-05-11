@@ -26,11 +26,11 @@ class Plotter:
         self.ax = ax
         self.maxt = 250
         self.tdata = [0]
-        self.ydata = [3.3/2]
+        self.ydata = [0]
         self.line = Line2D(self.tdata, self.ydata)
 
         self.ax.add_line(self.line)
-        self.ax.set_ylim(0, 3.3)
+        self.ax.set_ylim(-2, 2)
         self.ax.set_xlim(0, self.maxt)
 
     def update(self, y):
@@ -67,6 +67,7 @@ def serial_getter():
 # hard coded serial port name, timeout after 2 minutes
 ser = serial.Serial("COM3", 230400, timeout=120)
 
+ser.write("\n".encode())
 fig, ax = plt.subplots()
 plotter = Plotter(ax)
 
@@ -74,7 +75,7 @@ ani = animation.FuncAnimation(fig, plotter.update, serial_getter, interval=1,
                               blit=True, cache_frame_data=False)
 
 ax.set_xlabel("Samples")
-ax.set_ylabel("Voltage (V)")
-fig.canvas.manager.set_window_title('Plot Voltage Data [0-3.3V]')
+ax.set_ylabel("Z Acceleration (G)")
+fig.canvas.manager.set_window_title('Plot Z Acceleration G [-2,2]')
 fig.tight_layout()
 plt.show()
