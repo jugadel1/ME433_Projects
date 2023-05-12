@@ -4,7 +4,6 @@
 #include <xc.h> // for the core timer delay
 #include "ssd1306.h"
 
-
 unsigned char ssd1306_write = 0b01111000; // i2c address
 unsigned char ssd1306_read = 0b01111001; // i2c address
 unsigned char ssd1306_buffer[512]; // 128x32/8. Every bit is a pixel
@@ -31,7 +30,7 @@ void ssd1306_setup() {
     ssd1306_command(SSD1306_SETCOMPINS);
     ssd1306_command(0x02);
     ssd1306_command(SSD1306_SETCONTRAST);
-    ssd1306_command(0x8F);
+    ssd1306_command(0xFF); //0x8F
     ssd1306_command(SSD1306_SETPRECHARGE);
     ssd1306_command(0xF1);
     ssd1306_command(SSD1306_SETVCOMDETECT);
@@ -89,4 +88,24 @@ void ssd1306_clear() {
     memset(ssd1306_buffer, 0, 512); // make every bit a 0, memset in string.h
 }
 
+void drawChar(unsigned char x, unsigned char y, unsigned char letter){
+    for (int j=0; j<5; j++){
+        char col = ASCII[letter-0x20][j];
+        for(int i=0; i<8; i++){
+            ssd1306_drawPixel(x+j,y+i,(col>>i)&0b1);
+        }
+    }
+}
 
+void drawMessage(unsigned char x, unsigned char y, unsigned char * message){
+    int k = 0;
+    int j = 0;
+    while(message[k]!=0){
+        drawChar(x+6*k, y+8*j, message[k]);
+        k++;
+        if (k == 21){
+            k = 0;
+            j++;
+        }
+    }
+}

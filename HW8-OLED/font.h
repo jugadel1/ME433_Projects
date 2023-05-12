@@ -5,7 +5,8 @@
 // void drawChar(...);
 // void drawString(...);
 
-// lookup table for all of the ascii characters
+// lookup table for all of the ascii characters 
+//The first 20 chars aren't used, so index is (letter-0x20)
 static const char ASCII[96][5] = {
  {0x00, 0x00, 0x00, 0x00, 0x00} // 20  (space)
 ,{0x00, 0x00, 0x5f, 0x00, 0x00} // 21 !
