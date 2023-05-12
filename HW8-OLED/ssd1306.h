@@ -2,6 +2,7 @@
 #define SSD1306_H__
 
 #include "i2c_master_noint.h"
+#include "font.h"
 
 // Based on the adafruit and sparkfun libraries
 #define SSD1306_MEMORYMODE          0x20 

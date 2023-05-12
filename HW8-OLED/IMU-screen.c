@@ -9,34 +9,27 @@ void blink(int, int); // blink the LEDs function
 int main(void) {
     NU32DIP_Startup(); // cache on, interrupts on, LED/button init, UART init
     NU32DIP_WriteUART1("hello!\r\n");
-    init_mpu6050();
-	NU32DIP_WriteUART1("IMU-Initiated!\r\n");
+    
+    init_mpu6050(); // Initialize IMU chip (MPU6050)
+    ssd1306_setup(); // Initialize OLED screen (SSD1306)
 	
     unsigned char data_read[14]; // char array for the raw data
 	float ax, ay, az, gx, gy, gz, tc; // floats to store the data
-    unsigned char hoo;
-    hoo = whoami(); // read whoami
-    NU32DIP_WriteUART1("Whoami read");	
     
-    char mess[100];
-    sprintf(mess, "%X\r\n", hoo);
-    NU32DIP_WriteUART1(mess); // print whoami
-	
+    // read whoami	
+    unsigned char hoo;
+    hoo = whoami(); 
     // if whoami is not 0x68, stuck in loop with LEDs on
     if (hoo != 0x68){
         while(1){
             blink(1,200);       
         }
     }
-	// wait to print until you get a newline
-    unsigned char m_in[100];
-    NU32DIP_ReadUART1(m_in,100);
 
     while (1) {
 		// use core timer for exactly 100Hz loop
         _CP0_SET_COUNT(0);
         blink(1, 250);
-        // blinkk(250);
 
         // read IMU
         burst_read_mpu6050(data_read);
