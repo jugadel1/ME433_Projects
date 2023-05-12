@@ -62,7 +62,6 @@ int main(void) {
 
         // delay to 100 hz
         while (_CP0_GET_COUNT() < 48000000 / 2 / 100) {
-            _nop();
         }
         NU32DIP_YELLOW = 1; // Blink Yellow LED off
     }
