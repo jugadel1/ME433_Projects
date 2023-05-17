@@ -107,7 +107,6 @@ void ws2812b_setColor(wsColor * c, int numLEDs) {
         _nop();
     } 
     // wait 50uS, reset condition
-    TMR2 = 0;
 }
 
 // adapted from https://forum.arduino.cc/index.php?topic=8498.0
