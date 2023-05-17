@@ -18,9 +18,8 @@ int main(void) {
 	float brightness = Bri;
 
 	while(1){
-		wsColor color;
-		color = HSBtoRGB(hue_iter, saturation, brightness);
-		ws2812b_setColor(color, LEDS);
+		wsColor color = HSBtoRGB(hue_iter, saturation, brightness);
+		ws2812b_setColor(&color, LEDS);
 		delay(100);
 
 		hue_iter++;

@@ -11,7 +11,7 @@ typedef struct {
 } wsColor; 
 
 void ws2812b_setup();
-void ws2812b_setColor(wsColor*,int);
+void ws2812b_setColor(wsColor * c,int);
 wsColor HSBtoRGB(float hue, float sat, float brightness);
 
 #endif
