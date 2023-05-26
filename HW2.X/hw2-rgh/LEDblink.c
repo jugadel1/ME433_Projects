@@ -23,6 +23,7 @@ int main(void) {
     
     if (!NU32DIP_USER){
 		  blink(iters, len); // iters times, len ms each time
+      NU32DIP_WriteUART1("button executed\r\n");
 	  }
     else{
       NU32DIP_WriteUART1("no button\r\n");
