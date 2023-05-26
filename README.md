@@ -15,3 +15,7 @@
 ## HW6 - Communicate with GPIO port extender using I2C
 
 - The goal is to read from the button connected to GP0, and if pushed, turns on an LED connected to GP7, else turns off LED
+
+## HW 14 - RC Motor Control
+
+- Use the PIC to sweep the angle of the RC servo from 45 degrees to 135 degrees every 4 seconds
