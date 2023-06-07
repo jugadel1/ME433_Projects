@@ -50,15 +50,17 @@ void __ISR(_TIMER_2_VECTOR, IPL5SOFT) icontroller(void){  // _TIMER_2_VECTOR = 8
 
 void icontrolstartup(){
 
-    RPA0Rbits.RPA0R = 0b0101; // use pin A0 for OC1
+    RPA0Rbits.RPA0R = 0b0101; // use pin A0 for OC1 *** NEEDS CHANGE ***
+    RPA1Rbits.RPA1R = 0b0101; // use pin A1 for OC2 *** NEEDS CHANGE ***
+    
     volatile int duty = 25;
     volatile int dir = 0;
     TRISAbits.TRISA1 = 0; // configure pin A1 to output dirxn
     
-    /* 20 kHz PWM, Timer3, duty cycle 75% */
+    /* Motor 1: 20 kHz PWM, Timer3, duty cycle 0% */
     __builtin_disable_interrupts(); // INT step 2: disable interrupts at CPU
     T3CONbits.TCKPS = 0;    // Timer3 prescaler N=1 (1:1)
-    PR3 = 2400 - 1;         // PR = PBCLK(48MHz)/20KHz(Desired PWM)-1
+    PR3 = 2400 - 1;         // PR = PBCLK(48MHz)/20KHz(Desired PWM) - 1
     TMR3 = 0;               // initial TMR3 count is 0
     OC1CONbits.OCTSEL = 1; // chooses TMR3 for OC1 
     OC1CONbits.OCM = 0b110; // PWM mode without fault pin; other OC1CON bits are defaults
@@ -67,7 +69,14 @@ void icontrolstartup(){
     T3CONbits.ON = 1;       // turn on Timer3
     OC1CONbits.ON = 1;      // turn on OC1
 
-    // 5 Khz TMR2 ISR
+    /* Motor 2:  20 kHz PWM, Timer3, duty cycle 0% */
+    OC2CONbits.OCTSEL = 1; // chooses TMR3 for OC2 
+    OC2CONbits.OCM = 0b110; // PWM mode without fault pin; other OC1CON bits are defaults
+    OC2RS = 0;              // duty cycle = OC2RS/(PR3+1) = 75%
+    OC2R = 0;               // initialize before turning OC2 on; afterward it is read-only
+    OC2CONbits.ON = 1;      // turn on OC2
+
+    // 5 Khz TMR2 ISR *** NEEDS CHANGE (Maybe TMR4? Diff Freq)***
     PR2 = 9600 - 1;                // set period register
     TMR2 = 0;                       // initialize count to 0
     T2CONbits.TCKPS = 0;            // set prescaler to 1
