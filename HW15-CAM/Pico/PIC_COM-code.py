@@ -127,6 +127,23 @@ while True:
         blues[i] = (bitmap[row,i]>>11)/0x1F*100
         bright[i] = reds[i]+greens[i]+blues[i]
 
+    # threshold to try to find the line
+    # for i in range(0,60):
+    #    if (reds[i]>50 and blues[i]>50 and greens[i]>50):
+    #        bitmap[row,i] = 0xFFFF
+    #    else:
+    #        bitmap[row,i] = 0x0000
+    # print the raw pixel value to the computer
+    # for i in range(0,60):
+    #     print(str(i)+" "+str(bitmap[row,i]))
+
+    bitmap.dirty() # updae the image on the screen
+    display.refresh(minimum_frames_per_second=0)
+    t1 = time.monotonic_ns()
+    #print("fps", 1e9 / (t1 - t0))
+    t0 = t1
+    # in while True: after reading an image and finding the line
+    
     conv = np.convolve(np.convolve(reds,greens)[29:90-1],blues)[29:90-1]
     def COMf(data):
         COM_out = 0
@@ -135,18 +152,6 @@ while True:
         return COM_out
     
     com = COMf(conv)
-    # threshold to try to find the line
-    # for i in range(0,60):
-    #    if (reds[i]>50 and blues[i]>50 and greens[i]>50):
-    #        bitmap[row,i] = 0xFFFF
-    #    else:
-    #        bitmap[row,i] = 0x0000
-    # print the raw pixel value to the computer
-    for i in range(0,60):
-        print(str(i)+" "+str(bitmap[row,i]))
-
-    bitmap.dirty() # updae the image on the screen
-    display.refresh(minimum_frames_per_second=0)
-    t1 = time.monotonic_ns()
-    #print("fps", 1e9 / (t1 - t0))
-    t0 = t1
+    
+    value_str = str(com)+'\n'
+    uart.write(value_str.encode('utf-8'))
